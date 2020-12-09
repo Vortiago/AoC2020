@@ -57,6 +57,8 @@ namespace AdventOfCode
 
         private void Task2(long input)
         {
+            // Initial solution
+            var watch = System.Diagnostics.Stopwatch.StartNew();
             for(var i = 0; i < this.Numbers.Count(); i++) {
                 long sum = 0;
                 var range = 2;
@@ -72,6 +74,32 @@ namespace AdventOfCode
                     Console.WriteLine($"{min + max}");
                 }
             }
+            watch.Stop();
+            Console.WriteLine(watch.ElapsedMilliseconds);
+
+            // Solution based on feedback
+            watch.Restart();
+            long total = 0;
+            var skip = 0;
+            var take = 2;
+            while(total != input) {
+                if (total < input) {
+                    take += 1;
+                } else if (total > input) {
+                    skip += 1;
+                    take -= 1;
+                }
+
+                total = this.Numbers.Skip(skip).Take(take).Sum();
+            }
+
+            var numberRange = this.Numbers.GetRange(skip, take);
+            var mi = numberRange.Min();
+            var ma = numberRange.Max();
+            Console.WriteLine($"{mi + ma}");
+            
+            watch.Stop();
+            Console.WriteLine(watch.ElapsedMilliseconds);
         }
 
         public void Run()
