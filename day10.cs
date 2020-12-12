@@ -20,8 +20,6 @@ namespace AdventOfCode
                     .Where(text => text.Length > 0)
                     .Select(x => Int32.Parse(x)).ToList().OrderBy(x => x);
 
-                this.Numbers.AddFirst(0);
-
                 foreach(var number in data) {
                     this.Numbers.AddAfter(this.Numbers.Last, number);
                 }
@@ -30,7 +28,7 @@ namespace AdventOfCode
             }
         }
 
-        private Tuple<int, int, int> Task1()
+        private void Task1()
         {
             var one = 0;
             var two = 0;
@@ -51,27 +49,36 @@ namespace AdventOfCode
                 number = number.Next;
             }
 
-            return new Tuple<int, int, int>(one, two, three);
+            Console.WriteLine(one * three);
         }
 
-        private void Task2(int one, int two, int three)
+        private void Task2()
         {
-            
-        }
+            var ranges = new List<int>();
+            int counter = 0;
+            var number = this.Numbers.First.Next;
+            while(number is not null) {
+                if (number.Value - number.Previous.Value == 1) {
+                    counter += 1;
+                }
+                else if (number.Value - number.Previous.Value != 1) {
+                    ranges.Add(counter);
+                    counter = 0;
+                };
+                
+                number = number.Next;
+            }
 
-        private void Rec(LinkedList<int> numbers) 
-        {
-            
+            Console.WriteLine(ranges.Where(x => x >= 2).Select(x => x == 2 ? 2.0 : x == 3 ? 4.0 : 7.0).Aggregate((x, y) => x*y));
         }
 
         public void Run()
         {
             this.Init();
             Console.WriteLine("\nLooking for answer for Task 1.");
-            var x = this.Task1();
-            Console.WriteLine(x.Item1 * x.Item3);
+            this.Task1();
             Console.WriteLine("\nLooking for answer for Task 2.");
-            this.Task2(x.Item1, x.Item2, x.Item3);
+            this.Task2();
         }
     }
 }
