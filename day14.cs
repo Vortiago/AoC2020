@@ -33,25 +33,29 @@ namespace AdventOfCode
             return s.Replace("\r", String.Empty).Split("\n").Where(x => x.Length > 0).ToList();
         }
 
+        private Mask GenerateMask(string input) {
+            var mask = new Mask();
+            foreach (var bit in input) {
+                mask.Oner <<= 1;
+                mask.Nuller <<= 1;
+                if (bit == 'X') {
+                    mask.Nuller |= 1;
+                }
+                else if (bit == '1') {
+                    mask.Oner |= 1;
+                    mask.Nuller |= 1;
+                }
+            }
+            return mask;
+        }
+
         private void Task1(List<string> lines)
         {
             var mask = new Mask();
             foreach (var line in lines) {
                 var parts = line.Split('=');
                 if (parts[0].Trim() == "mask") {
-                    mask.Oner = 0;
-                    mask.Nuller = 0;
-                    foreach (var bit in parts[1].Trim()) {
-                        mask.Oner <<= 1;
-                        mask.Nuller <<= 1;
-                        if (bit == 'X') {
-                            mask.Nuller |= 1;
-                        }
-                        else if (bit == '1') {
-                            mask.Oner |= 1;
-                            mask.Nuller |= 1;
-                        }
-                    }
+                    mask = this.GenerateMask(parts[1].Trim());   
                 }
                 else {
                     var address = Int64.Parse(Regex.Match(parts[0], @"[0-9]+").Captures.First().Value);
@@ -64,7 +68,7 @@ namespace AdventOfCode
             Console.WriteLine(this.Memory.Values.Sum());
         }
 
-        private void Task2()
+        private void Task2(List<string> lines)
         {
             
         }
@@ -80,7 +84,7 @@ namespace AdventOfCode
             Console.WriteLine("\nLooking for answer for Task 1.");
             this.Task1(input);
             Console.WriteLine("\nLooking for answer for Task 2.");
-            this.Task2();
+            this.Task2(input);
         }
     }
 }
