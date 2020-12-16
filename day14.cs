@@ -16,6 +16,8 @@ namespace AdventOfCode
             public long Oner { get; set; }
 
             public long Nuller { get; set; }  
+
+            public long Xer { get; set; }
         }
 
         public Dictionary<long, long> Memory { get; set; } = new Dictionary<long, long>();
@@ -38,8 +40,10 @@ namespace AdventOfCode
             foreach (var bit in input) {
                 mask.Oner <<= 1;
                 mask.Nuller <<= 1;
+                mask.Xer <<= 1;
                 if (bit == 'X') {
                     mask.Nuller |= 1;
+                    mask.Xer |= 1;
                 }
                 else if (bit == '1') {
                     mask.Oner |= 1;
@@ -68,9 +72,31 @@ namespace AdventOfCode
             Console.WriteLine(this.Memory.Values.Sum());
         }
 
+        private IEnumerable<long> YieldToMe(long address, Mask mask) {
+            address |= mask.Oner;
+            for(long round = 0; round <= address; round++) {
+                yield return (address & ~mask.Xer) | (mask.Xer & round) ;
+            }
+        }
+
         private void Task2(List<string> lines)
         {
-            
+            Memory.Clear();
+            var mask = new Mask();
+            foreach (var line in lines) {
+                var parts = line.Split('=');
+                if (parts[0].Trim() == "mask") {
+                    mask = this.GenerateMask(parts[1].Trim());   
+                }
+                else {
+                    var address = Int64.Parse(Regex.Match(parts[0], @"[0-9]+").Captures.First().Value);
+                    var value = Int64.Parse(parts[1]);
+                    foreach(var maskedAddress in YieldToMe(address, mask)) {
+                        this.Memory[maskedAddress] = value;
+                    }
+                }
+            }
+            Console.WriteLine(this.Memory.Values.Sum());
         }
 
         public void Run()
@@ -80,6 +106,10 @@ namespace AdventOfCode
 // mem[8] = 11
 // mem[7] = 101
 // mem[8] = 0";
+//             s = @"mask = 000000000000000000000000000000X1001X
+// mem[42] = 100
+// mask = 00000000000000000000000000000000X0XX
+// mem[26] = 1";
             var input = this.ParseTodaysInput(s);
             Console.WriteLine("\nLooking for answer for Task 1.");
             this.Task1(input);
