@@ -18,6 +18,22 @@ namespace AdventOfCode
             public long Nuller { get; set; }  
 
             public long Xer { get; set; }
+            
+            public IEnumerable<long> Masks(long address) {
+                var indexes = Convert.ToString(Xer, 2).Reverse().Select((x, i) => x == '1' ? i : -1).Where(x => x > -1).ToList();
+                indexes.Reverse();
+                var numberOfIterations = Convert.ToInt32(Math.Pow(2, indexes.Count()));
+                foreach(var index in Enumerable.Range(0, numberOfIterations)) {
+                    var currentMask = Convert.ToInt64(0);
+                    var iterateOver = Convert.ToString(index, 2).PadLeft(indexes.Count, '0');
+                    for(var gettingCloser = 0; gettingCloser < iterateOver.Length; gettingCloser++) {
+                        if (iterateOver[gettingCloser] == '1') {
+                            currentMask |= Convert.ToInt64(1) << indexes[gettingCloser];
+                        }
+                    }
+                    yield return Xer & currentMask;
+                }
+            }
         }
 
         public Dictionary<long, long> Memory { get; set; } = new Dictionary<long, long>();
@@ -73,12 +89,9 @@ namespace AdventOfCode
         }
 
         private IEnumerable<long> YieldToMe(long address, Mask mask) {
-            var addressLength = Convert.ToString(address, 2).Length;
-            var reducedOner = mask.Oner & ~(~((long)0) << addressLength);
-            var reducedXer = mask.Xer & ~(~((long)0) << addressLength);
-            address |= reducedOner;
-            for(long round = 0; round <= (address | reducedXer); round++) {
-                yield return (address & ~reducedXer) | (reducedXer & round) ;
+            address |= mask.Oner;
+            foreach(var maskIteration in mask.Masks(address)) {
+                yield return (address & ~mask.Xer) | (mask.Xer & maskIteration);
             }
         }
 
