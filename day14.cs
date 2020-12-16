@@ -18,24 +18,6 @@ namespace AdventOfCode
             public long Nuller { get; set; }  
 
             public long Xer { get; set; }
-
-            public IEnumerable<UInt64> Masks(long address) {
-                var addressLength = Convert.ToString(address, 2).Length;
-                var reducedMask = Convert.ToUInt64(Xer) & ~(~Convert.ToUInt64(0) << addressLength);
-                var indexes = Convert.ToString(Convert.ToInt64(reducedMask), 2).Reverse().Select((x, i) => x == '1' ? i : -1).Where(x => x > -1).ToList();
-                indexes.Reverse();
-                var numberOfIterations = Convert.ToInt32(Math.Pow(2, indexes.Count()));
-                foreach(var index in Enumerable.Range(0, numberOfIterations)) {
-                    var currentMask = Convert.ToUInt64(0);
-                    var iterateOver = Convert.ToString(index, 2).PadLeft(indexes.Count, '0');
-                    for(var gettingCloser = 0; gettingCloser < iterateOver.Length; gettingCloser++) {
-                        if (iterateOver[gettingCloser] == '1') {
-                            currentMask |= Convert.ToUInt64(1) << indexes[gettingCloser];
-                        }
-                    }
-                    yield return reducedMask & currentMask;
-                }
-            }
         }
 
         public Dictionary<long, long> Memory { get; set; } = new Dictionary<long, long>();
@@ -92,10 +74,11 @@ namespace AdventOfCode
 
         private IEnumerable<long> YieldToMe(long address, Mask mask) {
             var addressLength = Convert.ToString(address, 2).Length;
-            var reducedMask = mask.Oner & ~(~0 << addressLength);
-            address |= reducedMask;
-            foreach(var maskIteration in mask.Masks(address)) {
-                yield return (address & ~mask.Xer) | (mask.Xer & Convert.ToInt64(maskIteration));
+            var reducedOner = mask.Oner & ~(~((long)0) << addressLength);
+            var reducedXer = mask.Xer & ~(~((long)0) << addressLength);
+            address |= reducedOner;
+            for(long round = 0; round <= (address | reducedXer); round++) {
+                yield return (address & ~reducedXer) | (reducedXer & round) ;
             }
         }
 
@@ -116,7 +99,11 @@ namespace AdventOfCode
                     }
                 }
             }
-            Console.WriteLine(this.Memory.Values.Sum());
+            ulong sum = 0;
+            foreach(var value in this.Memory.Values) {
+                sum += (ulong)value;
+            }
+            Console.WriteLine(this.Memory.Values.Aggregate((x, y) => x + y));
         }
 
         public void Run()
