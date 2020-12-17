@@ -12,11 +12,11 @@ namespace AdventOfCode
 {
     public class Day15
     {
-        public IEnumerable<int> YeetMeNext(int count) {
-            var last = 13;
-            for(var i = 6; i < count; i++) {
+        public IEnumerable<int> YeetMeNext(int initial, int count) {
+            var last = initial;
+            for(var i = this.NumberHistory.Keys.Count; i < count; i++) {
                 if (this.NumberHistory.ContainsKey(last) && this.NumberHistory[last].Count > 1){
-                    last = this.NumberHistory[last].OrderByDescending(x => x).First() - this.NumberHistory[last].OrderByDescending(x => x).Skip(1).First();
+                    last = this.NumberHistory[last].First() - this.NumberHistory[last].Skip(1).First();
                 } else {
                     last = 0;
                 }   
@@ -30,7 +30,7 @@ namespace AdventOfCode
                 this.NumberHistory.Add(number, new List<int>() {counter});
             }
             else {
-                this.NumberHistory[number].Add(counter);
+                this.NumberHistory[number].Insert(0, counter);
             }
         } 
 
@@ -41,18 +41,15 @@ namespace AdventOfCode
         }
 
         private void ParseTodaysInput() {
-            this.AddOrUpdate(1, 0);
-            this.AddOrUpdate(0, 1);
-            this.AddOrUpdate(15, 2);
-            this.AddOrUpdate(2, 3);
-            this.AddOrUpdate(10, 4);
-            this.AddOrUpdate(13, 5);
         }
 
         private void Task1()
         {
+            this.AddOrUpdate(0, 0);
+            this.AddOrUpdate(3, 1);
+            this.AddOrUpdate(6, 2);
             var numberCalled = 0;
-            foreach(var value in YeetMeNext(2020)) {
+            foreach(var value in YeetMeNext(6, 2020)) {
                 numberCalled = value;
             }
             Console.WriteLine(numberCalled);
@@ -60,8 +57,15 @@ namespace AdventOfCode
 
         private void Task2()
         {
+            this.NumberHistory.Clear();
+            this.AddOrUpdate(1, 0);
+            this.AddOrUpdate(0, 1);
+            this.AddOrUpdate(15, 2);
+            this.AddOrUpdate(2, 3);
+            this.AddOrUpdate(10, 4);
+            this.AddOrUpdate(13, 5);
             var numberCalled = 0;
-            foreach(var value in YeetMeNext(30000000)) {
+            foreach(var value in YeetMeNext(13, 30000000)) {
                 numberCalled = value;
             }
             Console.WriteLine(numberCalled);
