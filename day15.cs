@@ -65,8 +65,8 @@ namespace AdventOfCode
             this.AddOrUpdate(10, 4);
             this.AddOrUpdate(13, 5);
             var numberCalled = 0;
-            foreach(var value in YeetMeNext(13, 30000000)) {
-                numberCalled = value;
+            foreach(var yeet in YeetMeNext(13, 30000000)) {
+                numberCalled = yeet;
             }
             Console.WriteLine(numberCalled);
         }
