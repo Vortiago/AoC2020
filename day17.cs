@@ -206,6 +206,7 @@ namespace AdventOfCode
 
         public void Run()
         {
+            var watch = System.Diagnostics.Stopwatch.StartNew();
             var s = this.Init();
 //             s = @".#.
 // ..#
@@ -215,6 +216,9 @@ namespace AdventOfCode
             this.Task1(6);
             Console.WriteLine("\nLooking for answer for Task 2.");
             this.Task2(6);
+            watch.Stop();
+            var elapsedMs = watch.ElapsedMilliseconds;
+            Console.WriteLine(elapsedMs);
         }
     }
 }
