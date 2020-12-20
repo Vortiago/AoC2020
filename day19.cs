@@ -21,11 +21,14 @@ namespace AdventOfCode
             public char Char { get; set; }
             public int Validate(int curIndex, string data)
             {
+                if (curIndex >= data.Length) {
+                    return -1;
+                }
                 if (data[curIndex] == Char)
                 {
                     return curIndex + 1;
                 }
-                return curIndex;
+                return -1;
             }
         }
 
@@ -46,6 +49,9 @@ namespace AdventOfCode
                 var nextIndex = curIndex;
                 foreach(var rule in RecursiveRules) {
                     nextIndex = RuleSet[rule].Validate(nextIndex, data);
+                    if (nextIndex == -1) {
+                        return -1;
+                    }
                 }
 
                 return nextIndex;
@@ -108,7 +114,7 @@ namespace AdventOfCode
         private void Task1()
         {
             foreach(var input in Inputs) {
-                Console.WriteLine($"{ input } - {RuleSet[0].Validate(0, input) == input.Length}");
+                Console.WriteLine($"{ input } - {RuleSet[0].Validate(0, input)} - {RuleSet[0].Validate(0, input) == input.Length}");
             }
 
             Console.WriteLine(Inputs.Count(x => RuleSet[0].Validate(0, x) == x.Length));
@@ -121,18 +127,72 @@ namespace AdventOfCode
         public void Run()
         {
             var s = this.Init();
-//             s = @"0: 4 1 5
-// 1: 2 3 | 3 2
-// 2: 4 4 | 5 5
-// 3: 4 5 | 5 4
-// 4: a
-// 5: b
+            s = @"42: 9 14 | 10 1
+9: 14 27 | 1 26
+10: 23 14 | 28 1
+1: a
+11: 42 31 | 42 100 31
+100: 42 31 | 42 101 31
+101: 42 31 | 42 102 31
+102: 42 31 | 42 103 31
+103: 42 31 | 42 104 31
+104: 42 31 | 42 105 31
+105: 42 31 | 42 106 31
+106: 42 31 | 42 107 31
+107: 42 31 | 42 108 31
+108: 42 31 | 42 109 31
+109: 42 31 | 42 110 31
+110: 42 31
+5: 1 14 | 15 1
+19: 14 1 | 14 14
+12: 24 14 | 19 1
+16: 15 1 | 14 14
+31: 14 17 | 1 13
+6: 14 14 | 1 14
+2: 1 24 | 14 4
+0: 8 11
+13: 14 3 | 1 12
+15: 1 | 14
+17: 14 2 | 1 7
+23: 25 1 | 22 14
+28: 16 1
+4: 1 1
+20: 14 14 | 1 15
+3: 5 14 | 16 1
+27: 1 6 | 14 18
+14: b
+21: 14 1 | 1 14
+25: 1 1 | 1 14
+22: 14 14
+8: 42 | 42 200
+200: 42 | 42 201
+201: 42 | 42 202
+202: 42 | 42 203
+203: 42 | 42 204
+204: 42 | 42 205
+205: 42 | 42 206
+206: 42 | 42 207
+207: 42 
+26: 14 22 | 1 20
+18: 15 15
+7: 14 5 | 1 21
+24: 14 1
 
-// ababbb
-// bababa
-// abbbab
-// aaabbb
-// aaaabbb".Replace("\r\n", "\n");
+abbbbbabbbaaaababbaabbbbabababbbabbbbbbabaaaa
+bbabbbbaabaabba
+babbbbaabbbbbabbbbbbaabaaabaaa
+aaabbbbbbaaaabaababaabababbabaaabbababababaaa
+bbbbbbbaaaabbbbaaabbabaaa
+bbbababbbbaaaaaaaabbababaaababaabab
+ababaaaaaabaaab
+ababaaaaabbbaba
+baabbaaaabbaaaababbaababb
+abbbbabbbbaaaababbbbbbaaaababb
+aaaaabbaabaaaaababaa
+aaaabbaaaabbaaa
+aaaabbaabbaaaaaaabbbabbbaaabbaabaaa
+babaaabbbaaabaababbaabababaaab
+aabbbbbaabbbaaaaaabbbbbababaaaaabbaaabba".Replace("\r\n", "\n");
             this.ParseTodaysInput(s);
             Console.WriteLine("\nLooking for answer for Task 1.");
             this.Task1();
