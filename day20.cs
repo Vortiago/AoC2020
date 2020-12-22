@@ -12,9 +12,9 @@ using System.Text;
 namespace AdventOfCode
 {
     public static class Extensions {
-        public static char[,] FlipX(this char[,] charArray)
+        public static T[,] FlipX<T>(this T[,] charArray)
         {
-            var tmpArray = new Char[charArray.GetLength(0), charArray.GetLength(1)];
+            var tmpArray = new T[charArray.GetLength(0), charArray.GetLength(1)];
             for (var x = 0; x < charArray.GetLength(0); x++)
             {
                 for (var y = 0; y < charArray.GetLength(1); y++)
@@ -26,9 +26,9 @@ namespace AdventOfCode
             return tmpArray;
         }
 
-        public static char[,] FlipY(this char[,] charArray)
+        public static T[,] FlipY<T>(this T[,] charArray)
         {
-            var tmpArray = new Char[charArray.GetLength(0), charArray.GetLength(1)];
+            var tmpArray = new T[charArray.GetLength(0), charArray.GetLength(1)];
             for (var x = 0; x < charArray.GetLength(0); x++)
             {
                 for (var y = 0; y < charArray.GetLength(1); y++)
@@ -40,9 +40,9 @@ namespace AdventOfCode
             return tmpArray;
         }
 
-        public static char[,] Rotate(this char[,] charArray)
+        public static T[,] Rotate<T>(this T[,] charArray)
         {
-            var tmpArray = new Char[charArray.GetLength(0), charArray.GetLength(1)];
+            var tmpArray = new T[charArray.GetLength(0), charArray.GetLength(1)];
             for (var x = 0; x < charArray.GetLength(0); x++)
             {
                 for (var y = 0; y < charArray.GetLength(1); y++)
