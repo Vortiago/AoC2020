@@ -13,48 +13,34 @@ namespace AdventOfCode
     public class Day19
     {
         public interface IRule {
-            int Validate(int curIndex, string data);
+            string Validate();
         }
 
         public class CharRule : IRule
         {
             public char Char { get; set; }
-            public int Validate(int curIndex, string data)
+            public string Validate()
             {
-                if (curIndex >= data.Length) {
-                    return -1;
-                }
-                if (data[curIndex] == Char)
-                {
-                    return curIndex + 1;
-                }
-                return -1;
+                return $"{Char}";
             }
         }
 
         public class OrRule : IRule {
             public RecursiveRule LeftRule { get; set; } = new RecursiveRule();
             public RecursiveRule RightRule { get; set; } = new RecursiveRule();
-            public int Validate(int curIndex, string data) {
-                var a = LeftRule.Validate(curIndex, data);
-                var b = RightRule.Validate(curIndex, data);
-                return new List<int>{a, b}.Max();
+            public string Validate() {
+                var a = LeftRule.Validate();
+                var b = RightRule.Validate();
+                return $"({a}|{b})";
             }
         }
 
         public class RecursiveRule : IRule {
             public List<int> RecursiveRules { get; set; } = new List<int>();
 
-            public int Validate(int curIndex, string data) {
-                var nextIndex = curIndex;
-                foreach(var rule in RecursiveRules) {
-                    nextIndex = RuleSet[rule].Validate(nextIndex, data);
-                    if (nextIndex == -1) {
-                        return -1;
-                    }
-                }
-
-                return nextIndex;
+            public string Validate() {
+                
+                return $"{String.Join("", RecursiveRules.Select(x => RuleSet[x].Validate()))}";
             }
         }
 
@@ -113,11 +99,11 @@ namespace AdventOfCode
 
         private void Task1()
         {
+            var rule = $"^{RuleSet[0].Validate()}$";
             foreach(var input in Inputs) {
-                Console.WriteLine($"{ input } - {RuleSet[0].Validate(0, input)} - {RuleSet[0].Validate(0, input) == input.Length}");
+                Console.WriteLine($"{ input } - {Regex.IsMatch(input, rule)}");
             }
-
-            Console.WriteLine(Inputs.Count(x => RuleSet[0].Validate(0, x) == x.Length));
+            Console.WriteLine(Inputs.Count(x => Regex.IsMatch(x, rule)));
         }
 
         private void Task2()
@@ -127,72 +113,72 @@ namespace AdventOfCode
         public void Run()
         {
             var s = this.Init();
-            s = @"42: 9 14 | 10 1
-9: 14 27 | 1 26
-10: 23 14 | 28 1
-1: a
-11: 42 31 | 42 100 31
-100: 42 31 | 42 101 31
-101: 42 31 | 42 102 31
-102: 42 31 | 42 103 31
-103: 42 31 | 42 104 31
-104: 42 31 | 42 105 31
-105: 42 31 | 42 106 31
-106: 42 31 | 42 107 31
-107: 42 31 | 42 108 31
-108: 42 31 | 42 109 31
-109: 42 31 | 42 110 31
-110: 42 31
-5: 1 14 | 15 1
-19: 14 1 | 14 14
-12: 24 14 | 19 1
-16: 15 1 | 14 14
-31: 14 17 | 1 13
-6: 14 14 | 1 14
-2: 1 24 | 14 4
-0: 8 11
-13: 14 3 | 1 12
-15: 1 | 14
-17: 14 2 | 1 7
-23: 25 1 | 22 14
-28: 16 1
-4: 1 1
-20: 14 14 | 1 15
-3: 5 14 | 16 1
-27: 1 6 | 14 18
-14: b
-21: 14 1 | 1 14
-25: 1 1 | 1 14
-22: 14 14
-8: 42 | 42 200
-200: 42 | 42 201
-201: 42 | 42 202
-202: 42 | 42 203
-203: 42 | 42 204
-204: 42 | 42 205
-205: 42 | 42 206
-206: 42 | 42 207
-207: 42 
-26: 14 22 | 1 20
-18: 15 15
-7: 14 5 | 1 21
-24: 14 1
+//             s = @"42: 9 14 | 10 1
+// 9: 14 27 | 1 26
+// 10: 23 14 | 28 1
+// 1: a
+// 11: 42 31 | 42 100 31
+// 100: 42 31 | 42 101 31
+// 101: 42 31 | 42 102 31
+// 102: 42 31 | 42 103 31
+// 103: 42 31 | 42 104 31
+// 104: 42 31 | 42 105 31
+// 105: 42 31 | 42 106 31
+// 106: 42 31 | 42 107 31
+// 107: 42 31 | 42 108 31
+// 108: 42 31 | 42 109 31
+// 109: 42 31 | 42 110 31
+// 110: 42 31
+// 5: 1 14 | 15 1
+// 19: 14 1 | 14 14
+// 12: 24 14 | 19 1
+// 16: 15 1 | 14 14
+// 31: 14 17 | 1 13
+// 6: 14 14 | 1 14
+// 2: 1 24 | 14 4
+// 0: 8 11
+// 13: 14 3 | 1 12
+// 15: 1 | 14
+// 17: 14 2 | 1 7
+// 23: 25 1 | 22 14
+// 28: 16 1
+// 4: 1 1
+// 20: 14 14 | 1 15
+// 3: 5 14 | 16 1
+// 27: 1 6 | 14 18
+// 14: b
+// 21: 14 1 | 1 14
+// 25: 1 1 | 1 14
+// 22: 14 14
+// 8: 42 | 42 200
+// 200: 42 | 42 201
+// 201: 42 | 42 202
+// 202: 42 | 42 203
+// 203: 42 | 42 204
+// 204: 42 | 42 205
+// 205: 42 | 42 206
+// 206: 42 | 42 207
+// 207: 42 
+// 26: 14 22 | 1 20
+// 18: 15 15
+// 7: 14 5 | 1 21
+// 24: 14 1
 
-abbbbbabbbaaaababbaabbbbabababbbabbbbbbabaaaa
-bbabbbbaabaabba
-babbbbaabbbbbabbbbbbaabaaabaaa
-aaabbbbbbaaaabaababaabababbabaaabbababababaaa
-bbbbbbbaaaabbbbaaabbabaaa
-bbbababbbbaaaaaaaabbababaaababaabab
-ababaaaaaabaaab
-ababaaaaabbbaba
-baabbaaaabbaaaababbaababb
-abbbbabbbbaaaababbbbbbaaaababb
-aaaaabbaabaaaaababaa
-aaaabbaaaabbaaa
-aaaabbaabbaaaaaaabbbabbbaaabbaabaaa
-babaaabbbaaabaababbaabababaaab
-aabbbbbaabbbaaaaaabbbbbababaaaaabbaaabba".Replace("\r\n", "\n");
+// abbbbbabbbaaaababbaabbbbabababbbabbbbbbabaaaa
+// bbabbbbaabaabba
+// babbbbaabbbbbabbbbbbaabaaabaaa
+// aaabbbbbbaaaabaababaabababbabaaabbababababaaa
+// bbbbbbbaaaabbbbaaabbabaaa
+// bbbababbbbaaaaaaaabbababaaababaabab
+// ababaaaaaabaaab
+// ababaaaaabbbaba
+// baabbaaaabbaaaababbaababb
+// abbbbabbbbaaaababbbbbbaaaababb
+// aaaaabbaabaaaaababaa
+// aaaabbaaaabbaaa
+// aaaabbaabbaaaaaaabbbabbbaaabbaabaaa
+// babaaabbbaaabaababbaabababaaab
+// aabbbbbaabbbaaaaaabbbbbababaaaaabbaaabba".Replace("\r\n", "\n");
             this.ParseTodaysInput(s);
             Console.WriteLine("\nLooking for answer for Task 1.");
             this.Task1();
