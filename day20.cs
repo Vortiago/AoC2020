@@ -177,15 +177,7 @@ namespace AdventOfCode
                     EdgeToFind.SequenceEqual(tile.Rotate().LeftEdge) ||
                     EdgeToFind.SequenceEqual(tile.Rotate().LeftEdge) ||
                     EdgeToFind.SequenceEqual(tile.Rotate().LeftEdge) ||
-                    EdgeToFind.SequenceEqual(tile.Rotate().FlipY().LeftEdge) ||
-                    EdgeToFind.SequenceEqual(tile.Rotate().LeftEdge) ||
-                    EdgeToFind.SequenceEqual(tile.Rotate().LeftEdge) ||
-                    EdgeToFind.SequenceEqual(tile.Rotate().LeftEdge) ||
-                    EdgeToFind.SequenceEqual(tile.Rotate().FlipX().LeftEdge) ||
-                    EdgeToFind.SequenceEqual(tile.Rotate().LeftEdge) ||
-                    EdgeToFind.SequenceEqual(tile.Rotate().LeftEdge) ||
-                    EdgeToFind.SequenceEqual(tile.Rotate().LeftEdge) ||
-                    EdgeToFind.SequenceEqual(tile.Rotate().FlipY().LeftEdge);
+                    EdgeToFind.SequenceEqual(tile.Rotate().FlipX().LeftEdge);
         }
 
         public bool CheckTopEdge(IEnumerable<char> EdgeToFind, Tile tile) {
@@ -197,15 +189,7 @@ namespace AdventOfCode
                     EdgeToFind.SequenceEqual(tile.Rotate().TopEdge) ||
                     EdgeToFind.SequenceEqual(tile.Rotate().TopEdge) ||
                     EdgeToFind.SequenceEqual(tile.Rotate().TopEdge) ||
-                    EdgeToFind.SequenceEqual(tile.Rotate().FlipY().TopEdge) ||
-                    EdgeToFind.SequenceEqual(tile.Rotate().TopEdge) ||
-                    EdgeToFind.SequenceEqual(tile.Rotate().TopEdge) ||
-                    EdgeToFind.SequenceEqual(tile.Rotate().TopEdge) ||
-                    EdgeToFind.SequenceEqual(tile.Rotate().FlipX().TopEdge) || 
-                    EdgeToFind.SequenceEqual(tile.Rotate().TopEdge) ||
-                    EdgeToFind.SequenceEqual(tile.Rotate().TopEdge) ||
-                    EdgeToFind.SequenceEqual(tile.Rotate().TopEdge) ||
-                    EdgeToFind.SequenceEqual(tile.Rotate().FlipY().TopEdge);
+                    EdgeToFind.SequenceEqual(tile.Rotate().FlipX().TopEdge);
         }
 
         public Tile FindRightTile(Tile a) {
@@ -234,9 +218,6 @@ namespace AdventOfCode
             }
             if(FindBelowTile(initialTile) == null) {
                 initialTile.FlipY();
-            }
-            if(FindBelowTile(initialTile) == null) {
-                initialTile.FlipX();
             }
             if(FindRightTile(initialTile) == null) {
                 initialTile.FlipX();
@@ -298,7 +279,6 @@ namespace AdventOfCode
                 var textMap = stringBuild.ToString();
 
                 var numMonsters = FindMonsters(textMap);
-                Console.WriteLine(numMonsters);
                 charMap = charMap.Rotate();
             }
 
