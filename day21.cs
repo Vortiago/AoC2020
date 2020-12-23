@@ -17,12 +17,13 @@ namespace AdventOfCode
             public int TimesMentioned { get; set; } = 0;
             public string Allergen {get; set;}
 
-            public bool ContainsAllergen { get; set; } = false;
+            public bool ContainsAllergen => !String.IsNullOrEmpty(Allergen);
         }
 
         public class Allergene {
             public string Name { get; set; }
             public int TimesMentioned { get; set; } = 0;
+            public string Ingredient {get; set;}
             public Dictionary<string, int> PossibleIngredient { get; } = new Dictionary<string, int>();
         }
 
@@ -74,12 +75,11 @@ namespace AdventOfCode
 
         private void Task1()
         {
-            foreach(var allergen in Allergenes.Values) {
-                var maxMentions = allergen.PossibleIngredient.Max(x => x.Value);
+            foreach(var allergen in Allergenes.Values.OrderByDescending(x => x.PossibleIngredient.Max(y => y.Value))) {
+                var maxMentions = allergen.PossibleIngredient.Where(x => !Ingredients[x.Key].ContainsAllergen).Max(x => x.Value);
                 
-                foreach(var ingredient in allergen.PossibleIngredient.Where(x => x.Value == maxMentions).Select(x => x.Key)){
-                    
-                    Ingredients[ingredient].ContainsAllergen = true;
+                foreach(var ingredient in allergen.PossibleIngredient.Where(x => !Ingredients[x.Key].ContainsAllergen && x.Value == maxMentions).Select(x => x.Key)){
+                    if (Ingredients[ingredient].ContainsAllergen) continue;
                     Ingredients[ingredient].Allergen = allergen.Name;
                 }
             }
