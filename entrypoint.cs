@@ -2,5 +2,5 @@ using System;
 using AdventOfCode;
 
 Console.WriteLine("Time to get'a crackin'\n------------");
-var day = new Day23();
+var day = new Day24();
 day.Run();
