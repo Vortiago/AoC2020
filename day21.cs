@@ -75,12 +75,14 @@ namespace AdventOfCode
 
         private void Task1()
         {
-            foreach(var allergen in Allergenes.Values.OrderByDescending(x => x.PossibleIngredient.Max(y => y.Value))) {
-                var maxMentions = allergen.PossibleIngredient.Where(x => !Ingredients[x.Key].ContainsAllergen).Max(x => x.Value);
-                
-                foreach(var ingredient in allergen.PossibleIngredient.Where(x => !Ingredients[x.Key].ContainsAllergen && x.Value == maxMentions).Select(x => x.Key)){
-                    if (Ingredients[ingredient].ContainsAllergen) continue;
-                    Ingredients[ingredient].Allergen = allergen.Name;
+            while (Allergenes.Values.Where(x => string.IsNullOrEmpty(x.Ingredient)).Any()) {
+                foreach(var allergen in Allergenes.Values.Where(x => string.IsNullOrEmpty(x.Ingredient))) {
+                    var maxMentions = allergen.PossibleIngredient.Where(x => !Ingredients[x.Key].ContainsAllergen).Max(x => x.Value);
+                    var ingredients = allergen.PossibleIngredient.Where(x => x.Value == maxMentions && !Ingredients[x.Key].ContainsAllergen).ToList();
+                    if (ingredients.Count() == 1) {
+                        Ingredients[ingredients.First().Key].Allergen = allergen.Name;
+                        allergen.Ingredient = ingredients.First().Key;
+                    }
                 }
             }
             Console.WriteLine(Ingredients.Where(x => x.Value.ContainsAllergen == false).Sum(x => x.Value.TimesMentioned));
